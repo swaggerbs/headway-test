@@ -4,12 +4,17 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 @main
 struct HeadWayTestAppApp: App {
     var body: some Scene {
         WindowGroup {
-            BookListeningView()
+            BookListeningView(
+                store: Store(initialState: BookListeningFeature.State()) {
+                    BookListeningFeature()
+                }
+            )
         }
     }
 }

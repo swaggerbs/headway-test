@@ -4,10 +4,19 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 struct BookListeningView: View {
     
+    let store: StoreOf<BookListeningFeature>
+    @ObservedObject var viewStore: ViewStoreOf<BookListeningFeature>
+    
     @State var sliderValue: Double = 0
+    
+    init(store: StoreOf<BookListeningFeature>) {
+        self.store = store
+        self.viewStore = ViewStore(self.store, observe: { $0 })
+    }
     
     var body: some View {
         ZStack {
@@ -63,31 +72,31 @@ struct BookListeningView: View {
     private var toolbar: some View {
         HStack(spacing: 26) {
             Button {
-                
+                store.send(.previousButtonTapped)
             } label: {
                 Image(systemName: "backward.end.fill")
             }
             .font(.system(size: 28))
             Button {
-                
+                store.send(.gobackwardButtonTapped)
             } label: {
                 Image(systemName: "gobackward.5")
             }
             .font(.system(size: 32))
             Button {
-                
+                store.send(.pauseButtonTapped)
             } label: {
-                Image(systemName: "pause.fill")
+                Image(systemName: viewStore.isPaused ? "play.fill" : "pause.fill")
             }
             .font(.system(size: 40))
             Button {
-                
+                store.send(.goforwardButtonTapped)
             } label: {
                 Image(systemName: "goforward.10")
             }
             .font(.system(size: 32))
             Button {
-                
+                store.send(.goforwardButtonTapped)
             } label: {
                 Image(systemName: "forward.end.fill")
             }
@@ -96,13 +105,13 @@ struct BookListeningView: View {
         .buttonStyle(.plain)
     }
     
-    @State var isSound: Bool = true
-    
     @ViewBuilder
     private var modeToggle: some View {
-        Toggle(isOn: $isSound, label: {
-            Text("Active")
-        })
+        Toggle(
+            isOn: viewStore.$isSoundMode
+        ) {
+            EmptyView()
+        }
         .toggleStyle(ListeningModeToggleStyle())
     }
     
@@ -128,5 +137,8 @@ fileprivate extension Double {
 }
 
 #Preview {
-    BookListeningView()
+    let store = Store(initialState: BookListeningFeature.State()) {
+        BookListeningFeature()
+    }
+    return BookListeningView(store: store)
 }
