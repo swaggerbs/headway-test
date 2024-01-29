@@ -17,6 +17,8 @@
 		CE62EB8A2B6534DB005864CC /* ListeningModeToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE62EB892B6534DB005864CC /* ListeningModeToggleStyle.swift */; };
 		CE62EB8D2B66724B005864CC /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = CE62EB8C2B66724B005864CC /* ComposableArchitecture */; };
 		CE62EB8F2B66741E005864CC /* BookListeningFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE62EB8E2B66741E005864CC /* BookListeningFeature.swift */; };
+		CE62EB932B66B095005864CC /* BookListeningGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE62EB922B66B095005864CC /* BookListeningGateway.swift */; };
+		CE62EB972B66B1E7005864CC /* BookModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE62EB962B66B1E7005864CC /* BookModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,8 @@
 		CE62EB7B2B640281005864CC /* HeadWayTestAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadWayTestAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		CE62EB892B6534DB005864CC /* ListeningModeToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListeningModeToggleStyle.swift; sourceTree = "<group>"; };
 		CE62EB8E2B66741E005864CC /* BookListeningFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookListeningFeature.swift; sourceTree = "<group>"; };
+		CE62EB922B66B095005864CC /* BookListeningGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookListeningGateway.swift; sourceTree = "<group>"; };
+		CE62EB962B66B1E7005864CC /* BookModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,7 +104,8 @@
 		CE62EB5D2B64027D005864CC /* HeadWayTestApp */ = {
 			isa = PBXGroup;
 			children = (
-				CE62EB882B6530D9005864CC /* BookListeningScreen */,
+				CE62EB912B66B03C005864CC /* Gateways */,
+				CE62EB902B66B02A005864CC /* UI */,
 				CE62EB5E2B64027D005864CC /* HeadWayTestAppApp.swift */,
 				CE62EB622B640280005864CC /* Assets.xcassets */,
 				CE62EB642B640280005864CC /* Preview Content */,
@@ -141,6 +146,23 @@
 				CE62EB8E2B66741E005864CC /* BookListeningFeature.swift */,
 			);
 			path = BookListeningScreen;
+			sourceTree = "<group>";
+		};
+		CE62EB902B66B02A005864CC /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				CE62EB882B6530D9005864CC /* BookListeningScreen */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		CE62EB912B66B03C005864CC /* Gateways */ = {
+			isa = PBXGroup;
+			children = (
+				CE62EB922B66B095005864CC /* BookListeningGateway.swift */,
+				CE62EB962B66B1E7005864CC /* BookModel.swift */,
+			);
+			path = Gateways;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -279,6 +301,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE62EB972B66B1E7005864CC /* BookModel.swift in Sources */,
+				CE62EB932B66B095005864CC /* BookListeningGateway.swift in Sources */,
 				CE62EB612B64027D005864CC /* BookListeningView.swift in Sources */,
 				CE62EB8F2B66741E005864CC /* BookListeningFeature.swift in Sources */,
 				CE62EB8A2B6534DB005864CC /* ListeningModeToggleStyle.swift in Sources */,

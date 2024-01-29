@@ -11,8 +11,6 @@ struct BookListeningView: View {
     let store: StoreOf<BookListeningFeature>
     @ObservedObject var viewStore: ViewStoreOf<BookListeningFeature>
     
-    @State var sliderValue: Double = 0
-    
     init(store: StoreOf<BookListeningFeature>) {
         self.store = store
         self.viewStore = ViewStore(self.store, observe: { $0 })
@@ -41,16 +39,30 @@ struct BookListeningView: View {
                 modeToggle
             }
         }
+        .onAppear {
+            if viewStore.duration == 0 {
+                store.send(.fetchAudioDuration)
+            }
+            store.send(.subscribeToCurrentTime)
+        }
     }
     
     @ViewBuilder
     private var slider: some View {
         VStack {
-            Slider(value: $sliderValue, in: 0...300) {
+            Slider(value: viewStore.$currentTime, in: 0...viewStore.duration) {
             } minimumValueLabel: {
-                sliderLabel(sliderValue.asString())
+                sliderLabel(viewStore.currentTimeLocalized)
+                    .frame(width: 40, alignment: .leading)
             } maximumValueLabel: {
-                sliderLabel(300.asString())
+                sliderLabel(viewStore.durationLocalized)
+                    .frame(width: 40, alignment: .trailing)
+            } onEditingChanged: { editing in
+                if !editing {
+                    store.send(.sliderFinishedEditing)
+                } else if editing {
+                    store.send(.sliderStartedEditing)
+                }
             }
             .padding(.horizontal, 20)
             .padding(.top, 10)
@@ -118,20 +130,8 @@ struct BookListeningView: View {
     @ViewBuilder
     private func sliderLabel(_ text: String) -> some View {
         Text(text)
-            .font(.system(size: 14))
+            .font(.system(size: 12))
             .foregroundStyle(.gray)
-    }
-    
-}
-
-fileprivate extension Double {
-    
-    func asString() -> String {
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.minute, .second]
-        formatter.unitsStyle = .positional
-        formatter.zeroFormattingBehavior = .pad
-        return formatter.string(from: self) ?? ""
     }
     
 }
