@@ -21,29 +21,41 @@ struct BookListeningView: View {
             Color.brown.opacity(0.15)
                 .ignoresSafeArea()
             VStack {
-                Rectangle()
-                    .frame(width: 200, height: 300)
-                Text("KEY POINT 2 OF 10")
+                AsyncImage(url: viewStore.book.imageUrl) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 200, height: 300)
+                        .clipped()
+                } placeholder: {
+                    Color.gray
+                        .frame(width: 200, height: 300)
+                }
+                Text("KEY POINT \(viewStore.currentKeypointNumber) OF \(viewStore.keyPointCount)")
                     .foregroundStyle(.gray)
                     .font(.system(size: 14, weight: .medium))
                     .padding(.top, 25)
-                Text("Design is not how a thing looks, but how it works")
-                    .padding(.horizontal, 40)
-                    .padding(.top, 1)
-                    .lineLimit(2)
-                    .font(.system(size: 16))
-                    .multilineTextAlignment(.center)
+                if viewStore.isReadyToPlay {
+                    Text(viewStore.keypointTitle)
+                        .padding(.horizontal, 40)
+                        .padding(.top, 1)
+                        .lineLimit(2)
+                        .font(.system(size: 16))
+                        .multilineTextAlignment(.center)
+                        .frame(height: 50, alignment: .center)
+                } else {
+                    ProgressView()
+                        .frame(height: 50, alignment: .center)
+                }
                 slider
+                    .disabled(!viewStore.isReadyToPlay)
                 toolbar
                     .padding(.vertical, 40)
                 modeToggle
             }
         }
         .onAppear {
-            if viewStore.duration == 0 {
-                store.send(.fetchAudioDuration)
-            }
-            store.send(.subscribeToCurrentTime)
+            store.send(.viewDidAppear)
         }
     }
     
@@ -67,9 +79,9 @@ struct BookListeningView: View {
             .padding(.horizontal, 20)
             .padding(.top, 10)
             Button {
-                
+                store.send(.speedButtonTapped)
             } label: {
-                Text("Speed x1")
+                Text("Speed \(viewStore.currentSpeed)")
                     .padding(10)
                     .font(.system(size: 12, weight: .bold))
             }
@@ -89,30 +101,46 @@ struct BookListeningView: View {
                 Image(systemName: "backward.end.fill")
             }
             .font(.system(size: 28))
+            .disabled(viewStore.isFirstKeypoint)
+            .disabled(!viewStore.isReadyToPlay)
             Button {
                 store.send(.gobackwardButtonTapped)
             } label: {
                 Image(systemName: "gobackward.5")
             }
             .font(.system(size: 32))
+            .disabled(!viewStore.isReadyToPlay)
             Button {
-                store.send(.pauseButtonTapped)
+                if viewStore.isErrorWhileLoading {
+                    store.send(.refresh)
+                } else {
+                    store.send(.pauseButtonTapped)
+                }
             } label: {
-                Image(systemName: viewStore.isPaused ? "play.fill" : "pause.fill")
+                if viewStore.isErrorWhileLoading {
+                    Image(systemName: "arrow.clockwise")
+                } else {
+                    Image(systemName: viewStore.isPaused ? "play.fill" : "pause.fill")
+                }
             }
             .font(.system(size: 40))
+            .disabled(!viewStore.isReadyToPlay && !viewStore.isErrorWhileLoading)
             Button {
                 store.send(.goforwardButtonTapped)
             } label: {
                 Image(systemName: "goforward.10")
             }
             .font(.system(size: 32))
+            
+            .disabled(!viewStore.isReadyToPlay)
             Button {
-                store.send(.goforwardButtonTapped)
+                store.send(.nextButtonTapped)
             } label: {
                 Image(systemName: "forward.end.fill")
             }
             .font(.system(size: 28))
+            .disabled(viewStore.isLastKeypoint)
+            .disabled(!viewStore.isReadyToPlay)
         }
         .buttonStyle(.plain)
     }
@@ -137,7 +165,7 @@ struct BookListeningView: View {
 }
 
 #Preview {
-    let store = Store(initialState: BookListeningFeature.State()) {
+    let store = Store(initialState: BookListeningFeature.State(book: BookModel(title: "", imageUrl: URL(fileURLWithPath: ""), keyPoints: []))) {
         BookListeningFeature()
     }
     return BookListeningView(store: store)

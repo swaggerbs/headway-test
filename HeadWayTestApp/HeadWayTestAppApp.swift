@@ -11,7 +11,7 @@ struct HeadWayTestAppApp: App {
     var body: some Scene {
         WindowGroup {
             BookListeningView(
-                store: Store(initialState: BookListeningFeature.State()) {
+                store: Store(initialState: BookListeningFeature.State(book: BookModel.testBookModel)) {
                     BookListeningFeature()
                 }
             )
